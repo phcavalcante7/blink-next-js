@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Categoria {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  camisetas Camiseta[]
+}
+
+model Camiseta {
+  id          Int       @id @default(autoincrement())
+  nome        String
+  modelo      String
+  estoque     Json
+  slug        String    @unique
+  descricao   String
+  ordem       Int       @default(0)
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId Int
+  imagens     ImagemCamiseta[]
+  itensPedido ItemPedido[]
+}
+
+model ImagemCamiseta {
+  id         Int      @id @default(autoincrement())
+  imagemUrl  String
+  camiseta   Camiseta @relation(fields: [camisetaId], references: [id])
+  camisetaId Int
+}
+
+model Pedido {
+  id              Int          @id @default(autoincrement())
+  email           String?
+  data            DateTime     @default(now())
+  total           Decimal      @db.Decimal(8, 2)
+  pago            Boolean      @default(false)
+  stripeSessionId String?      @unique
+  status          String       @default("pendente")
+  itens           ItemPedido[]
+}
+
+model ItemPedido {
+  id            Int      @id @default(autoincrement())
+  pedido        Pedido   @relation(fields: [pedidoId], references: [id])
+  pedidoId      Int
+  camiseta      Camiseta @relation(fields: [camisetaId], references: [id])
+  camisetaId    Int
+  modelo        String
+  tamanho       String
+  quantidade    Int
+  precoUnitario Decimal  @db.Decimal(6, 2)
+}
