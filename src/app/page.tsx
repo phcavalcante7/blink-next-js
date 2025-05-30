@@ -31,7 +31,7 @@ export default function Home() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/camisetas"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded shadow-md text-sm font-bold transition text-xl"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded shadow-md font-bold transition text-xl"
             >
               Ver Drop Kyoto
             </Link>
